@@ -48,7 +48,7 @@ async function start() {
     }
 
     if (counter % batchLogAmount === 0) {
-      progress += "...";
+      progress += ".";
       console.log(progress);
     }
   }
