@@ -2,7 +2,15 @@ import { readdir } from "node:fs/promises";
 import { execSync } from "node:child_process";
 import path, { resolve } from "node:path";
 import * as url from "url";
-import { startingPath, debug, batchLogAmount } from "./config.js";
+import {
+  startingPath,
+  debug,
+  batchLogAmount,
+  emailTo,
+  emailSubject,
+  emailUser,
+  emailPass,
+} from "./config.js";
 
 const extensionsImg = [".jpg", ".jpeg", ".heic"];
 const extensionsVid = [".3gp", ".mov", ".mp4"];
@@ -20,10 +28,10 @@ async function* getFiles(dir) {
 }
 
 async function start() {
+  const startTime = new Date().toLocaleString();
   console.time("set-file-props");
 
   const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
-  const scriptPath = path.join(__dirname, "./set-file-props.ps1");
 
   console.log(`===== STARTING_PATH ===== ${startingPath}`);
 
@@ -38,6 +46,7 @@ async function start() {
       const fileName = f.substring(lastSlash + 1, f.length);
       const propertyNumber = extensionsImg.includes(fExtension) ? 12 : 208;
 
+      const scriptPath = path.join(__dirname, "./set-file-props.ps1");
       const scriptArgs = `-filedir "${fileDir}" -filename "${fileName}" -propnumber ${propertyNumber} -debug ${debug}`;
 
       execSync(`${scriptPath} ${scriptArgs}`, {
@@ -53,8 +62,18 @@ async function start() {
     }
   }
 
-  console.log(`Total files processed = ${counter}`);
+  const emailBody = `StartingPath: ${startingPath}.<hr>Total files processed: ${counter}.<hr>Started at: ${startTime}.`;
+  console.log(emailBody);
   console.timeEnd("set-file-props");
+
+  const scriptPath2 = path.join(__dirname, "./send-email.ps1");
+  const scriptArgs2 = `-emailto "${emailTo}" -emailsubject "${emailSubject}" -emailbody "${emailBody}" -emailuser "${emailUser}" -emailpass "${emailPass}"`;
+
+  execSync(`${scriptPath2} ${scriptArgs2}`, {
+    stdio: "inherit",
+    encoding: "utf-8",
+    shell: "powershell",
+  });
 }
 
 start();
