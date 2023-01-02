@@ -21,20 +21,23 @@ async function decodeImage(image) {
 }
 
 export async function convert(fileDir = "", fileName = "") {
-  // export async function convert() {
-  // const fileName = "20220320_140753923_iOS";
-  // const fileDir = "C:/_CODE/_STLDEV/set-file-dates-js/imgs/rick";
   const heicPath = `${fileDir}/${fileName}.heic`;
   const jpgPath = `${fileDir}/${fileName}.jpg`;
 
-  if (existsSync(jpgPath)) {
-    // console.log("This HEIC already converted!");
+  if (existsSync(jpgPath)) return 0; // This HEIC already converted
+
+  const buffer = await readFile(heicPath);
+  let data;
+  try {
+    const decoder = new pkg.libheif.HeifDecoder();
+    data = decoder.decode(buffer);
+  } catch (err) {
+    console.log("ERROR in libheif.HeifDecoder!");
+    console.log("heicPath: ", heicPath);
+    console.log("Stacktrace: ", err);
     return 0;
   }
 
-  const buffer = await readFile(heicPath);
-  const decoder = new pkg.libheif.HeifDecoder();
-  const data = decoder.decode(buffer);
   const image = await decodeImage(data[0]);
   const quality = 92;
 
