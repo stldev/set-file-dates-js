@@ -66,7 +66,8 @@ async function start() {
 
     if (counter % batchLogAmount === 0) {
       progress += ".";
-      console.log(progress);
+      const progressLog = `[${counter}]${progress}`;
+      console.log(progressLog);
     }
   }
 
