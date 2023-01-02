@@ -4,6 +4,7 @@ export const batchLogAmount = 25;
 
 export const emailTo = "someEmailAddressToSendTo";
 export const emailSubject = "theEmailsSubject";
-
 export const emailUser = "theSenderOfTheEmails";
 export const emailPass = "theSenderPassword";
+
+export const convertHeic = 0;

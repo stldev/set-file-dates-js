@@ -10,7 +10,9 @@ import {
   emailSubject,
   emailUser,
   emailPass,
+  convertHeic,
 } from "./config.js";
+import { convert } from "./heic-convert.js";
 
 const extensionsImg = [".jpg", ".jpeg", ".heic"];
 const extensionsVid = [".3gp", ".mov", ".mp4"];
@@ -46,8 +48,14 @@ async function start() {
       const fileName = f.substring(lastSlash + 1, f.length);
       const propertyNumber = extensionsImg.includes(fExtension) ? 12 : 208;
 
+      let newJpgFromHeic = 0;
+
+      if (convertHeic && fExtension === ".heic") {
+        newJpgFromHeic = await convert(fileDir, fileName.split(".")[0]);
+      }
+
       const scriptPath = path.join(__dirname, "./set-file-props.ps1");
-      const scriptArgs = `-filedir "${fileDir}" -filename "${fileName}" -propnumber ${propertyNumber} -debug ${debug}`;
+      const scriptArgs = `-filedir "${fileDir}" -filename "${fileName}" -propnumber ${propertyNumber} -debug ${debug} -setnewjpg ${newJpgFromHeic}`;
 
       execSync(`${scriptPath} ${scriptArgs}`, {
         stdio: "inherit",

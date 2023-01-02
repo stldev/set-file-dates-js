@@ -1,4 +1,4 @@
-param($filedir='__missing__', $filename='__missing__', $propnumber=0, $debug=0) 
+param($filedir='__missing__', $filename='__missing__', $propnumber=0, $debug=0, $setnewjpg=0) 
 
 $fullName = "$($filedir)\$($filename)"
 
@@ -18,6 +18,12 @@ if ($isDateTaken) {
     Set-ItemProperty -Path $fullName -Name CreationTime -Value $DateTaken	
     Set-ItemProperty -Path $fullName -Name LastWriteTime -Value $DateTaken	
 
+    if ($setnewjpg -eq 1){
+        $fullNameNewJpg =  $fullName.Replace(".heic", ".jpg");
+        Set-ItemProperty -Path $fullNameNewJpg -Name CreationTime -Value $DateTaken	
+        Set-ItemProperty -Path $fullNameNewJpg -Name LastWriteTime -Value $DateTaken	
+    }
+
 } else {
 		    
     $dtModified = [DateTime](Get-ItemProperty $fullName -Name LastWriteTime).LastWriteTime
@@ -25,10 +31,18 @@ if ($isDateTaken) {
 
     if ($dtModified -lt $dtCreated) {  
         Set-ItemProperty -Path $fullName -Name CreationTime -Value $dtModified
+        if ($setnewjpg -eq 1){
+            $fullNameNewJpg =  $fullName.Replace(".heic", ".jpg");
+            Set-ItemProperty -Path $fullNameNewJpg -Name CreationTime -Value $dtModified
+        }
     }
     
     if ($dtCreated -lt $dtModified) { 
         Set-ItemProperty -Path $fullName -Name LastWriteTime -Value $dtCreated
+        if ($setnewjpg -eq 1){
+            $fullNameNewJpg =  $fullName.Replace(".heic", ".jpg");
+            Set-ItemProperty -Path $fullNameNewJpg -Name LastWriteTime -Value $dtCreated
+        }
     }
     
 }
