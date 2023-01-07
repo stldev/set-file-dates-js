@@ -18,3 +18,7 @@
 - Loop thru all videos:
   - if have a mediaCreated then set created and modified to that value
   - if no dateTaken then set created or modified both to the earliest date
+
+### Sample output
+
+- ![](./readme-img.PNG)
