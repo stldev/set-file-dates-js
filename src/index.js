@@ -47,15 +47,32 @@ async function start() {
       const fileDir = f.substring(0, lastSlash);
       const fileName = f.substring(lastSlash + 1, f.length);
       const propertyNumber = extensionsImg.includes(fExtension) ? 12 : 208;
-
-      let newJpgFromHeic = 0;
+      let scriptArgs = `-filedir "${fileDir}" -filename "${fileName}" -propnumber ${propertyNumber} -debug ${debug}`;
 
       if (convertHeic && fExtension === ".heic") {
-        newJpgFromHeic = await convert(fileDir, fileName.split(".")[0]);
+        const newJpgFromHeic = await convert(fileDir, fileName.split(".")[0]);
+        scriptArgs += ` -setnewjpg ${newJpgFromHeic}`;
+      }
+
+      const first4 = fileName.substring(0, 4);
+      const middle2 = fileName.substring(4, 6);
+      const last2 = fileName.substring(6, 8);
+
+      const dateFromFileName = new Date(
+        Number(first4),
+        Number(middle2) - 1,
+        Number(last2),
+        10,
+        10,
+        10
+      );
+
+      if (!isNaN(dateFromFileName)) {
+        const fileNameDateIso = dateFromFileName.toISOString();
+        scriptArgs += ` -filenamedate "${fileNameDateIso}"`;
       }
 
       const scriptPath = path.join(__dirname, "./set-file-props.ps1");
-      const scriptArgs = `-filedir "${fileDir}" -filename "${fileName}" -propnumber ${propertyNumber} -debug ${debug} -setnewjpg ${newJpgFromHeic}`;
 
       execSync(`${scriptPath} ${scriptArgs}`, {
         stdio: "inherit",

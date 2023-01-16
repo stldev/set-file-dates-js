@@ -1,4 +1,4 @@
-param($filedir='__missing__', $filename='__missing__', $propnumber=0, $debug=0, $setnewjpg=0) 
+param($filedir='__none__', $filename='__none__', $propnumber=0, $debug=0, $setnewjpg=0, $filenamedate='__none__') 
 
 $fullName = "$($filedir)\$($filename)"
 
@@ -25,25 +25,37 @@ if ($isDateTaken) {
     }
 
 } else {
-		    
-    $dtModified = [DateTime](Get-ItemProperty $fullName -Name LastWriteTime).LastWriteTime
-    $dtCreated = [DateTime](Get-ItemProperty $fullName -Name CreationTime).CreationTime
 
-    if ($dtModified -lt $dtCreated) {  
-        Set-ItemProperty -Path $fullName -Name CreationTime -Value $dtModified
-        if ($setnewjpg -eq 1){
-            $fullNameNewJpg =  $fullName.Replace(".heic", ".jpg");
-            Set-ItemProperty -Path $fullNameNewJpg -Name CreationTime -Value $dtModified
+     if ($filenamedate -eq "__none__") {
+
+        $dtModified = [DateTime](Get-ItemProperty $fullName -Name LastWriteTime).LastWriteTime
+        $dtCreated = [DateTime](Get-ItemProperty $fullName -Name CreationTime).CreationTime
+
+        if ($dtModified -lt $dtCreated) {  
+            Set-ItemProperty -Path $fullName -Name CreationTime -Value $dtModified
+            if ($setnewjpg -eq 1){
+                $fullNameNewJpg =  $fullName.Replace(".heic", ".jpg");
+                Set-ItemProperty -Path $fullNameNewJpg -Name CreationTime -Value $dtModified
+            }
         }
-    }
-    
-    if ($dtCreated -lt $dtModified) { 
-        Set-ItemProperty -Path $fullName -Name LastWriteTime -Value $dtCreated
-        if ($setnewjpg -eq 1){
-            $fullNameNewJpg =  $fullName.Replace(".heic", ".jpg");
-            Set-ItemProperty -Path $fullNameNewJpg -Name LastWriteTime -Value $dtCreated
+
+        if ($dtCreated -lt $dtModified) { 
+            Set-ItemProperty -Path $fullName -Name LastWriteTime -Value $dtCreated
+            if ($setnewjpg -eq 1){
+                $fullNameNewJpg =  $fullName.Replace(".heic", ".jpg");
+                Set-ItemProperty -Path $fullNameNewJpg -Name LastWriteTime -Value $dtCreated
+            }
         }
-    }
+
+     } else {
+        $fileNameDateTime = [DateTime]$filenamedate
+        Set-ItemProperty -Path $fullName -Name CreationTime -Value $fileNameDateTime
+        Set-ItemProperty -Path $fullName -Name LastWriteTime -Value $fileNameDateTime
+     }
+
+
+
+
     
 }
 
