@@ -20,6 +20,6 @@
   "homepage": "https://github.com/stldev/set-file-dates-js#readme",
   "dependencies": {
     "jpeg-js": "0.4.4",
-    "libheif-js": "1.15.1"
+    "libheif-js": "1.17.1"
   }
 }

@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { writeFile, readFile } from "node:fs/promises";
 import * as jpegJs from "jpeg-js";
-import * as pkg from "libheif-js";
+import libheif from "libheif-js/wasm-bundle.js";
 
 async function decodeImage(image) {
   const width = image.get_width();
@@ -29,7 +29,7 @@ export async function convert(fileDir = "", fileName = "") {
   const buffer = await readFile(heicPath);
   let data;
   try {
-    const decoder = new pkg.libheif.HeifDecoder();
+    const decoder = new libheif.HeifDecoder();
     data = decoder.decode(buffer);
   } catch (err) {
     console.log("ERROR in libheif.HeifDecoder!");
