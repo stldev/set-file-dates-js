@@ -7,4 +7,4 @@ export const emailSubject = "theEmailsSubject";
 export const emailUser = "theSenderOfTheEmails";
 export const emailPass = "theSenderPassword";
 
-export const convertHeic = 0;
+export const runAllTasks = 1;
