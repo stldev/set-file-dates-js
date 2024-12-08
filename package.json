@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/stldev/set-file-dates-js#readme",
   "dependencies": {
+    "@sendgrid/mail": "8.1.4",
     "jpeg-js": "0.4.4",
-    "libheif-js": "1.17.1"
+    "libheif-js": "1.18.2",
+    "prettier": "3.4.2"
   }
 }

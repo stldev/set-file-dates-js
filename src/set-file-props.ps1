@@ -52,10 +52,6 @@ if ($isDateTaken) {
         Set-ItemProperty -Path $fullName -Name CreationTime -Value $fileNameDateTime
         Set-ItemProperty -Path $fullName -Name LastWriteTime -Value $fileNameDateTime
      }
-
-
-
-
     
 }
 
